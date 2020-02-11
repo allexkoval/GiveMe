@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using GiveMe.Models;
+using GiveMe.Data;
 
 namespace GiveMe.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
+        private ApplicationDbContext _ctx;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext ctx)
         {
-            _logger = logger;
+            _ctx = ctx;
         }
 
         public IActionResult Index()
@@ -32,6 +34,20 @@ namespace GiveMe.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public IActionResult Edit()
+        {
+            return View(new Post());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Post post)
+        {
+            _ctx.Posts.Add(post);
+            await _ctx.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }

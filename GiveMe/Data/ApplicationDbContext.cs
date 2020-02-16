@@ -15,5 +15,6 @@ namespace GiveMe.Data
         }
 
         public DbSet<Post> Posts { get; set; }
+
     }
 }

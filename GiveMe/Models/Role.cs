@@ -7,7 +7,7 @@ namespace GiveMe.Models
 {
     public class Role
     {
-        public int RoleId { get; set; }
+        public int Id { get; set; }
         public String RoleName { get; set; }
 
     }

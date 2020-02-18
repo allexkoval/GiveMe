@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GiveMe.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class IRepository : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public IRepository(DbContextOptions<IRepository> options)
             : base(options)
         {
         }

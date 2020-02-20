@@ -8,7 +8,8 @@ using Microsoft.Extensions.Logging;
 using GiveMe.Models;
 using GiveMe.Data;
 using GiveMe.Data.Repository;
-using GiveMe.Data.User;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace GiveMe.Controllers
 {
@@ -16,13 +17,14 @@ namespace GiveMe.Controllers
     {
         
         private IRepo _repo;
-
+        IHttpContextAccessor _httpContextAccessor;
         IRepository _context;
 
-        public HomeController(IRepo repo, IRepository context)
+        public HomeController(IRepo repo, IRepository context, IHttpContextAccessor httpContextAccessor)
         {
             _repo = repo;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()
@@ -87,8 +89,9 @@ namespace GiveMe.Controllers
 
         public IActionResult UserPage()
         {
-            var users = _context.Users.ToList();
-            return View(users);
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _context.Users.FirstOrDefault(p => p.Id == userId);
+            return View(user);
         }
     }
 }

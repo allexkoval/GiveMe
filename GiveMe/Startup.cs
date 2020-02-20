@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Razor;
 using GiveMe.Data.Repository;
+using Microsoft.AspNetCore.Http;
+using GiveMe.Models;
 
 namespace GiveMe
 {
@@ -33,7 +35,14 @@ namespace GiveMe
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<Data.Repository.IRepo, Repository>();
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddDefaultIdentity<ApplicationUser>(options => {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+                options.SignIn.RequireConfirmedAccount = true;
+                })
                 .AddEntityFrameworkStores<Data.IRepository>();
             services.AddAuthentication()
                 .AddFacebook(facebookOptions =>

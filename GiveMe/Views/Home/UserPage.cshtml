@@ -1,20 +1,10 @@
-﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+﻿@model ApplicationUser
 @{
     ViewData["Title"] = "UserPage";
 }
 
-<h1>User list</h1>
+    <h1>@Model.FirstName @Model.LastName</h1>
 <div>
-    <ul>
-        @foreach (var user in Model)
-        {
-            <li>
-                
-                    @user.UserName
-                
-            </li>
-        }
-
-    </ul>
+    Your E-mail is @Model.Email
 </div>
 

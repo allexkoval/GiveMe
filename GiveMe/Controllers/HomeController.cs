@@ -10,6 +10,8 @@ using GiveMe.Data;
 using GiveMe.Data.Repository;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using GiveMe.ViewModels;
 
 namespace GiveMe.Controllers
 {
@@ -18,13 +20,17 @@ namespace GiveMe.Controllers
 
         private IRepo _repo;
         IHttpContextAccessor _httpContextAccessor;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<ApplicationUser> userManager;
         IRepository _context;
 
-        public HomeController(IRepo repo, IRepository context, IHttpContextAccessor httpContextAccessor)
+        public HomeController(IRepo repo, IRepository context, IHttpContextAccessor httpContextAccessor, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _repo = repo;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            this.roleManager = roleManager;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -47,24 +53,40 @@ namespace GiveMe.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            var adminRole = _httpContextAccessor.HttpContext.User.IsInRole("admin");
+            var developerRole = _httpContextAccessor.HttpContext.User.IsInRole("developer");
+
+            bool inRole = false;
+
+            if (adminRole || developerRole)
+            {
+                inRole = true;
+            }
+
             if (id == null)
-                return View(new Project());
+                return View(new EditViewModel());
             else
             {
-                var post = _repo.GetPost((int)id);
-                return View(post);
+            var editViewModel = new EditViewModel
+            {
+                IsinRole = inRole,
+                UserProject = _repo.GetPost((int)id)
+            };
+
+                //var post = _repo.GetPost((int)id);
+                return View(editViewModel);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Project post)
+        public async Task<IActionResult> Edit(EditViewModel post)
         {
-            if (post.Id > 0)
-                _repo.UpdatePost(post);
+            if (post.UserProject.Id > 0)
+                _repo.UpdatePost(post.UserProject);
             else
             {
-                post.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                _repo.AddPost(post);
+                post.UserProject.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                _repo.AddPost(post.UserProject);
             }
             if (await _repo.SaveChangesAsync())
                 return RedirectToAction("Projects");
@@ -86,10 +108,31 @@ namespace GiveMe.Controllers
         }
 
 
-        public IActionResult Project(int id)
+        public async Task<IActionResult> Project(int id)
         {
+            var adminRole = _httpContextAccessor.HttpContext.User.IsInRole("admin");
+            var developerRole = _httpContextAccessor.HttpContext.User.IsInRole("developer");
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var post = _repo.GetPost(id);
-            return View(post);
+            bool inRole = false;
+
+            if (adminRole || developerRole)
+            {
+                inRole = true;
+            }
+
+            var projectViewModel = new ProjectViewModel
+            {
+                ProjectId = post.Id,
+                ProjectTitle = post.Title,
+                ProjectDescription = post.ShortDescription,
+                ProjectBody = post.Body,
+                AdminRole = inRole,
+                UserId = userId,
+                CreatedBy = post.UserId
+            };
+
+            return View(projectViewModel);
         }
 
         public IActionResult ProjectInformation()

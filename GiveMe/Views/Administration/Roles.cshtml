@@ -18,8 +18,13 @@
             <ul>
                 @foreach (var role in Model)
                 {
+                    if(role.Name == "developer")
+                    {
+                        continue;
+                    }
                     <li>
-                        @role.Name
+                        <a asp-controller="Administration" asp-action="Role" asp-route-id="@role.Id">@role.Name</a>
+                        
                     </li>
                 }
             </ul>
@@ -30,10 +35,6 @@
         }
     </div>
 
-    <div>
-        <p>Search for a user:</p>
-        <input />
-        <input type="submit" value="Search" />
-    </div>
+
 
 

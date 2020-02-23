@@ -10,14 +10,12 @@
     <ul>
         @foreach(var project in Model)
         {
-            if(project.UserId == ViewBag.user)
-            {
             <li>
                 <a asp-controller="Home" asp-action="Project" asp-route-id="@project.Id">
                     @project.Title
                 </a>
             </li>
-            }
+
         }
         
     </ul>

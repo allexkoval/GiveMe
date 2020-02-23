@@ -1,22 +1,27 @@
-﻿@model Project
+﻿@model ProjectViewModel
 @{
     ViewData["Title"] = "Project";
 }
 
-<h1>@Model.Title</h1>
-<p> @Model.ShortDescription</p>
+<h1>@Model.ProjectTitle</h1>
+<p> @Model.ProjectDescription</p>
+<p> @Model.ProjectBody</p>
+
+@if (Model.UserId == Model.CreatedBy || Model.AdminRole)
+{
 
 <div>
     <p>
-        <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Id">
+        <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.ProjectId">
             Edit
         </a>
 
-        <a asp-controller="Home" asp-action="Remove" asp-route-id="@Model.Id">
+        <a asp-controller="Home" asp-action="Remove" asp-route-id="@Model.ProjectId">
             Remove
         </a>
     </p>
 </div>
+}
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <ul>
@@ -36,21 +41,4 @@
         </div>
     </ul>
 </nav>
-
-@if (ViewBag.act == "Body")
-{
-    <partial name="_ProjectBodyPartial" />
-}
-else if (ViewBag.act == "Comments")
-{
-    <partial name="_CommentSectionPartial" />
-}
-else if (ViewBag.act == "Payment")
-{
-    <partial name="_FAQPartial" />
-}
-else
-{
-    <partial name="_ProjectBodyPartial" />
-}
 

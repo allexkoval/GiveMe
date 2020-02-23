@@ -18,13 +18,18 @@
     {
         if (project.Featured)
         {
-            <div>
-                <p>
-                    @project.Title
-                </p>
-                <p>
-                    @project.ShortDescription
-                </p>
+            <div class="card m-3">
+                <div class="card-header text-center">
+                    <h3>
+                        @project.Title
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <h5>
+                        @project.ShortDescription
+                    </h5>
+                </div>
+
             </div>
         }
     }

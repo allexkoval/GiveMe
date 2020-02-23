@@ -1,4 +1,4 @@
-﻿@model Project
+﻿@model EditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,23 +8,68 @@
 
 <div>
     <form asp-controller="Home" asp-action="Edit" method="post">
-        <input asp-for="Id" type="hidden" />
-        <input asp-for="UserId" type ="hidden" />
-        <input asp-for="Featured" type ="hidden" />
+
+        @if (Model.IsinRole)
+        {
+            <input asp-for="UserProject.Featured" class="form-check-input" />
+            <label class="form-check-label" asp-for="UserProject.Featured">
+                Featured
+            </label>
+        }
+        else
+        {
+            <input asp-for="UserProject.Featured" type="hidden" />
+        }
+        <input asp-for="UserProject.Id" type="hidden" />
+        <input asp-for="UserProject.UserId" type="hidden" />
+
+        <table>
+            <tr>
+                <td>
+                    <label>Title</label>
+                </td>
+                <td>
+                    <input asp-for="UserProject.Title" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Short description</label>
+                </td>
+                <td>
+                    <input asp-for="UserProject.ShortDescription" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Body</label>
+                </td>
+                <td>
+                    <input asp-for="UserProject.Body" />
+                </td>
+            </tr>
+        </table>
+        
+        @*
+            
         <div>
             <label>Title</label>
-            <input asp-for="Title" />
+            <input asp-for="UserProject.Title" />
         </div>
 
         <div>
             <label>Short description</label>
-            <input asp-for="ShortDescription" />
+            <input asp-for="UserProject.ShortDescription" />
         </div>
 
         <div>
             <label>Body</label>
-            <input asp-for="Body" />
+            <input asp-for="UserProject.Body" />
         </div>
+        *@
+
+
+
         <input type="submit" value="Submit" />
     </form>
 </div>

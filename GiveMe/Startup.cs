@@ -34,6 +34,7 @@ namespace GiveMe
             services.AddDbContext<Data.IRepository>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddTransient<Data.Repository.IRepo, Repository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDefaultIdentity<ApplicationUser>(options => {
@@ -43,6 +44,7 @@ namespace GiveMe
                 options.Password.RequireUppercase = false;
                 options.SignIn.RequireConfirmedAccount = true;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<Data.IRepository>();
             services.AddAuthentication()
                 .AddFacebook(facebookOptions =>

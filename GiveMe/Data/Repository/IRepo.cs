@@ -8,10 +8,10 @@ namespace GiveMe.Data.Repository
 {
     public interface IRepo
     {
-        public Post GetPost(int id);
-        List<Post> GetAllPosts();
-        void AddPost(Post post);
-        void UpdatePost(Post post);
+        public Project GetPost(int id);
+        List<Project> GetAllPosts();
+        void AddPost(Project post);
+        void UpdatePost(Project post);
         void RemovePost(int id);
 
         Task<bool> SaveChangesAsync();

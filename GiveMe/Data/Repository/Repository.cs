@@ -14,17 +14,17 @@ namespace GiveMe.Data.Repository
         {
             _ctx = ctx;
         }
-        public void AddPost(Post post)
+        public void AddPost(Project post)
         {
             _ctx.Posts.Add(post);
         }
 
-        public List<Post> GetAllPosts()
+        public List<Project> GetAllPosts()
         {
             return _ctx.Posts.ToList();
         }
 
-        public Post GetPost(int id)
+        public Project GetPost(int id)
         {
             return _ctx.Posts.FirstOrDefault(p => p.Id == id);
         }
@@ -34,7 +34,7 @@ namespace GiveMe.Data.Repository
             _ctx.Posts.Remove(GetPost(id));
         }
 
-        public void UpdatePost(Post post)
+        public void UpdatePost(Project post)
         {
             _ctx.Posts.Update(post);
         }

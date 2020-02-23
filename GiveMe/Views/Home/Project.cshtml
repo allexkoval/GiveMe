@@ -1,0 +1,56 @@
+﻿@model Project
+@{
+    ViewData["Title"] = "Project";
+}
+
+<h1>@Model.Title</h1>
+<p> @Model.ShortDescription</p>
+
+<div>
+    <p>
+        <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Id">
+            Edit
+        </a>
+
+        <a asp-controller="Home" asp-action="Remove" asp-route-id="@Model.Id">
+            Remove
+        </a>
+    </p>
+</div>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <ul>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Project" >Project Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Project">Comments</a>
+                </li>
+            </ul>
+        </div>
+    </ul>
+</nav>
+
+@if (ViewBag.act == "Body")
+{
+    <partial name="_ProjectBodyPartial" />
+}
+else if (ViewBag.act == "Comments")
+{
+    <partial name="_CommentSectionPartial" />
+}
+else if (ViewBag.act == "Payment")
+{
+    <partial name="_FAQPartial" />
+}
+else
+{
+    <partial name="_ProjectBodyPartial" />
+}
+

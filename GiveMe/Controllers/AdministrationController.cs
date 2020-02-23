@@ -8,19 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GiveMe.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "developer, admin")]
     public class AdministrationController : Controller
     {
-        /*private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public AdministrationController(RoleManager<IdentityRole> roleManager)
         {
             this.roleManager = roleManager;
         }
-        */
+        
         public IActionResult Roles()
         {
-            return View();
+            var roles = roleManager.Roles;
+            return View(roles);
         }
     }
 }

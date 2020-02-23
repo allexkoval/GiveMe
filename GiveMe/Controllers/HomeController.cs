@@ -15,7 +15,7 @@ namespace GiveMe.Controllers
 {
     public class HomeController : Controller
     {
-        
+
         private IRepo _repo;
         IHttpContextAccessor _httpContextAccessor;
         IRepository _context;
@@ -29,7 +29,8 @@ namespace GiveMe.Controllers
 
         public IActionResult Index()
         {
-          return View();
+            var posts = _repo.GetAllPosts();
+            return View(posts);
         }
 
         public IActionResult Privacy()
@@ -46,8 +47,8 @@ namespace GiveMe.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if(id == null)
-                return View(new Post());
+            if (id == null)
+                return View(new Project());
             else
             {
                 var post = _repo.GetPost((int)id);
@@ -56,27 +57,49 @@ namespace GiveMe.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Post post)
+        public async Task<IActionResult> Edit(Project post)
         {
             if (post.Id > 0)
                 _repo.UpdatePost(post);
             else
-            _repo.AddPost(post);
+            {
+                post.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                _repo.AddPost(post);
+            }
             if (await _repo.SaveChangesAsync())
-                return RedirectToAction("Posts");
+                return RedirectToAction("Projects");
             else return View(post);
         }
 
-        public IActionResult Posts()
+        public IActionResult Projects()
         {
             var posts = _repo.GetAllPosts();
+            ViewBag.user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return View(posts);
         }
 
-        public IActionResult Post(int id)
+        public ActionResult _UserProjects()
+        {
+            var posts = _repo.GetAllPosts();
+            ViewBag.user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return View(posts);
+        }
+
+
+        public IActionResult Project(int id)
         {
             var post = _repo.GetPost(id);
             return View(post);
+        }
+
+        public IActionResult ProjectInformation()
+        {
+            return View();
+        }
+
+        public IActionResult Comments()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -84,7 +107,7 @@ namespace GiveMe.Controllers
         {
             _repo.RemovePost(id);
             await _repo.SaveChangesAsync();
-            return RedirectToAction("Posts");
+            return RedirectToAction("Projects");
         }
 
         public IActionResult UserPage()

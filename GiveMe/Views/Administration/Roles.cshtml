@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityRole>
+@{
     ViewData["Title"] = "Roles";
 }
 
@@ -7,8 +9,31 @@
     </div>
    
     <div>
+        <p>List of existing Roles:</p>
+    </div>
+
+    <div>
+        @if (Model.Any())
+        {
+            <ul>
+                @foreach (var role in Model)
+                {
+                    <li>
+                        @role.Name
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No roles created</p>
+        }
+    </div>
+
+    <div>
         <p>Search for a user:</p>
         <input />
         <input type="submit" value="Search" />
     </div>
+
 

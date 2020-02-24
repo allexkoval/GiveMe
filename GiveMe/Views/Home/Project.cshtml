@@ -4,8 +4,14 @@
 }
 
 <h1>@Model.Project.Title</h1>
-<div class="float-right">
-    <input class="m-1" type="submit" value="Donate" />
+
+<div>
+    <progress style="" max="@Model.Project.Needed" value="@Model.Project.AlreadyFunded"></progress>
+    <p>Funded @Model.Project.AlreadyFunded out of @Model.Project.Needed</p>
+</div>
+
+<div class="text-center">
+    <a asp-controller="Home" asp-action="Donate" asp-route-id="@Model.Project.Id"><button class="btm btn-success btn-lg btn-block" >Donate</button> </a>
 </div>
 @if (Model.Project.ImageUrl != null)
 {

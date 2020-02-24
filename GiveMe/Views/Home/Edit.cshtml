@@ -56,8 +56,17 @@
                     <input asp-for="UserProject.ImageFile" type="file" class="form-control" />
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <label>How much do you need</label>
+                </td>
+                <td>
+                    <input asp-for="UserProject.Needed" />
+                </td>
+            </tr>
         </table>
         <div>
+            <input asp-for="UserProject.AlreadyFunded" type="hidden" />
             <input asp-for="UserProject.ImageStorageName" type="hidden" />
             <input asp-for="UserProject.ImageUrl" type="hidden" />
         </div>

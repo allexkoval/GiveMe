@@ -16,8 +16,8 @@ namespace GiveMe.Models
         public string Title { get; set; } = "";
         public string ShortDescription { get; set; } = "";
         public string Body { get; set; } = "";
-        //public string Media { get; set; } = "";
-        
+        public int Needed { get; set; } = 0;
+        public int AlreadyFunded { get; set; }
         public bool Featured { get; set; }
                 
         public DateTime Created { get; set; } = DateTime.Now;

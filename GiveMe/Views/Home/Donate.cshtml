@@ -1,0 +1,32 @@
+﻿@model DonateViewModel
+@{
+    ViewData["Title"] = "Donate";
+}
+
+<h1>Donate</h1>
+<div>
+    <form asp-controller="Home" asp-action="Donate" method="post" enctype="multipart/form-data">
+
+        <div class="text-center">
+            <h4> How much do you want to donate?</h4>
+        </div>
+        <div class="m-3 text-center">
+            <input type="text" asp-for="@Model.UserCash" />
+
+        </div>
+        <div class="m-2 text-center">
+            <input type="submit" value="Donate" />
+        </div>
+        <input asp-for="@Model.UserProject.Id" type="hidden" />
+        <input asp-for="@Model.UserProject.UserId" type="hidden" />
+        <input asp-for="@Model.UserProject.Title" type="hidden" />
+        <input asp-for="@Model.UserProject.Body" type="hidden" />
+        <input asp-for="@Model.UserProject.ShortDescription" type="hidden" />
+        <input asp-for="@Model.UserProject.Needed" type="hidden" />
+        <input asp-for="@Model.UserProject.AlreadyFunded" type="hidden" />
+        <input asp-for="@Model.UserProject.Featured" type="hidden" />
+        <input asp-for="@Model.UserProject.ImageStorageName" type="hidden" />
+        <input asp-for="@Model.UserProject.ImageUrl" type="hidden" />
+
+    </form>
+</div>

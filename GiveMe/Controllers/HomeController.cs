@@ -160,6 +160,28 @@ namespace GiveMe.Controllers
         {
             return View();
         }
+        
+        [HttpGet]
+        public IActionResult Donate(int id)
+        {
+            var project = _repo.GetPost(id);
+            var donateViewModel = new DonateViewModel
+            {
+                UserProject = project
+            };
+            return View(donateViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Donate(DonateViewModel donateViewModel)
+        {
+            donateViewModel.UserProject.AlreadyFunded += donateViewModel.UserCash;
+            _repo.UpdatePost(donateViewModel.UserProject);
+
+            if (await _repo.SaveChangesAsync())
+                return RedirectToAction("Projects");
+            else return View(donateViewModel.UserProject);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Remove(int id)

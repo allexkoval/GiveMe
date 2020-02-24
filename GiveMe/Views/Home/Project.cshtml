@@ -3,42 +3,40 @@
     ViewData["Title"] = "Project";
 }
 
-<h1>@Model.ProjectTitle</h1>
-<p> @Model.ProjectDescription</p>
-<p> @Model.ProjectBody</p>
+<h1>@Model.Project.Title</h1>
+<div class="float-right">
+    <input class="m-1" type="submit" value="Donate" />
+</div>
+@if (Model.Project.ImageUrl != null)
+{
+    
+        <div class="text-center">
+    <img src="@Url.Content(Model.Project.ImageUrl)" class="img-fluid rounded"  />
+        </div>
+    
+}
+<p> @Model.Project.ShortDescription</p>
+<p> @Model.Project.Body</p>
 
 @if (Model.UserId == Model.CreatedBy || Model.AdminRole)
 {
 
-<div>
-    <p>
-        <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.ProjectId">
-            Edit
-        </a>
+    <div>
+        <p>
+            <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Project.Id">
+                Edit
+            </a>
 
-        <a asp-controller="Home" asp-action="Remove" asp-route-id="@Model.ProjectId">
-            Remove
-        </a>
-    </p>
-</div>
+            <a asp-controller="Home" asp-action="Remove" asp-route-id="@Model.Project.Id">
+                Remove
+            </a>
+        </p>
+    </div>
 }
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <ul>
-        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Project" >Project Information</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Project">Comments</a>
-                </li>
-            </ul>
-        </div>
-    </ul>
+        <div class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Comments">Comments</a>
+         </div>
 </nav>
 

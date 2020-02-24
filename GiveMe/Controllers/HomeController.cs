@@ -12,20 +12,23 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using GiveMe.ViewModels;
+using GiveMe.CloudStorage;
+using System.IO;
 
 namespace GiveMe.Controllers
 {
     public class HomeController : Controller
     {
-
+        private readonly ICloudStorage _cloudStorage;
         private IRepo _repo;
         IHttpContextAccessor _httpContextAccessor;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
         IRepository _context;
 
-        public HomeController(IRepo repo, IRepository context, IHttpContextAccessor httpContextAccessor, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public HomeController(ICloudStorage cloudStorage, IRepo repo, IRepository context, IHttpContextAccessor httpContextAccessor, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
+            _cloudStorage = cloudStorage;
             _repo = repo;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
@@ -82,9 +85,25 @@ namespace GiveMe.Controllers
         public async Task<IActionResult> Edit(EditViewModel post)
         {
             if (post.UserProject.Id > 0)
+            {
+                if(post.UserProject.ImageFile != null)
+                {
+
+                if(post.UserProject.ImageStorageName != null)
+                {
+                    await _cloudStorage.DeleteFileAsync(post.UserProject.ImageStorageName);
+                }
+                    await UploadFile(post.UserProject);
+                }
+
                 _repo.UpdatePost(post.UserProject);
+            }
             else
             {
+                if(post.UserProject.ImageFile != null)
+                {
+                    await UploadFile(post.UserProject);
+                }
                 post.UserProject.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 _repo.AddPost(post.UserProject);
             }
@@ -123,10 +142,7 @@ namespace GiveMe.Controllers
 
             var projectViewModel = new ProjectViewModel
             {
-                ProjectId = post.Id,
-                ProjectTitle = post.Title,
-                ProjectDescription = post.ShortDescription,
-                ProjectBody = post.Body,
+                Project =post,
                 AdminRole = inRole,
                 UserId = userId,
                 CreatedBy = post.UserId
@@ -148,6 +164,12 @@ namespace GiveMe.Controllers
         [HttpGet]
         public async Task<IActionResult> Remove(int id)
         {
+            var project = await _context.Posts.FindAsync(id);
+            if (project.ImageStorageName != null)
+            {
+                await _cloudStorage.DeleteFileAsync(project.ImageStorageName);
+            }
+            
             _repo.RemovePost(id);
             await _repo.SaveChangesAsync();
             return RedirectToAction("Projects");
@@ -158,6 +180,20 @@ namespace GiveMe.Controllers
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = _context.Users.FirstOrDefault(p => p.Id == userId);
             return View(user);
+        }
+
+        private async Task UploadFile(Project project)
+        {
+            string fileNameForStorage = FormFileName(project.Title, project.ImageFile.FileName);
+            project.ImageUrl = await _cloudStorage.UploadFileAsync(project.ImageFile, fileNameForStorage);
+            project.ImageStorageName = fileNameForStorage;
+        }
+
+        private static string FormFileName(string title, string fileName)
+        {
+            var fileExtension = Path.GetExtension(fileName);
+            var fileNameForStorage = $"{title}-{DateTime.Now.ToString("yyyyMMddHHmmss")}{fileExtension}";
+            return fileNameForStorage;
         }
     }
 }

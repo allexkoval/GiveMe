@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,13 +21,15 @@ namespace GiveMe.Models
         public bool Featured { get; set; }
                 
         public DateTime Created { get; set; } = DateTime.Now;
-        
-        /*
-        [Authorize(Roles = "developer")]
-        public bool IsFeatured()
-        {
-            return false;
-        }
-        */
+
+        [DataType(DataType.ImageUrl)]
+        [Display(Name ="Poster")]
+        public string ImageUrl { get; set; }
+
+        [Display(Name ="Image File")]
+        [NotMapped]
+        public virtual IFormFile ImageFile { get; set; }
+
+        public string ImageStorageName { get; set; }
     }
 }

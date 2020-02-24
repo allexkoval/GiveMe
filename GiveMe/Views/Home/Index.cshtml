@@ -25,6 +25,14 @@
                     </h3>
                 </div>
                 <div class="card-body">
+                    @if(project.ImageUrl != null)
+                    {
+                    <div class="text-center">
+                        <img src="@Url.Content(project.ImageUrl)" class="img-fluid"  />
+                    </div>
+                    }
+                </div>
+                <div class="card-footer">
                     <h5>
                         @project.ShortDescription
                     </h5>

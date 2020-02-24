@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Razor;
 using GiveMe.Data.Repository;
 using Microsoft.AspNetCore.Http;
 using GiveMe.Models;
+using GiveMe.CloudStorage;
 
 namespace GiveMe
 {
@@ -60,6 +61,7 @@ namespace GiveMe
                     );
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSingleton<ICloudStorage, GoogleCloudStorage>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
